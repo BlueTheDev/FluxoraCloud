@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anmelden – FluxoraCloud</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='white'>☁</text></svg>" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="logo-icon">☁</div>
+      FluxoraCloud
+    </a>
+    <div class="nav-actions" style="margin-left:auto;">
+      <button class="theme-btn" id="themeToggle">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="card">
+      <div class="auth-logo">
+        <div class="logo-icon">☁</div>
+        <h2>Willkommen zurück</h2>
+        <p>Melde dich in deinem Konto an</p>
+      </div>
+
+      <div class="form-group">
+        <label>E-Mail-Adresse</label>
+        <input type="email" id="emailInput" class="form-control" placeholder="max@example.com" autocomplete="email" />
+        <div class="form-error" id="emailError">Ungültige E-Mail-Adresse.</div>
+      </div>
+
+      <div class="form-group">
+        <label style="display:flex;justify-content:space-between;">
+          Passwort
+          <a href="reset.html" style="font-weight:400;font-size:12px;">Passwort vergessen?</a>
+        </label>
+        <input type="password" id="passwordInput" class="form-control" placeholder="Dein Passwort" autocomplete="current-password" />
+        <div class="form-error" id="passwordError">Passwort ist falsch.</div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" id="loginBtn">
+        Anmelden
+      </button>
+
+      <div class="auth-switch">
+        Noch kein Konto? <a href="register.html">Kostenlos registrieren</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script type="module">
+  import { auth, signInWithEmailAndPassword, onAuthStateChanged, initTheme, toggleTheme, toast } from '../js/firebase.js';
+
+  initTheme();
+  const themeBtn = document.getElementById('themeToggle');
+  themeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    themeBtn.textContent = toggleTheme() === 'dark' ? '☀️' : '🌙';
+  });
+
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.href = 'dashboard.html';
+  });
+
+  function clearErrors() {
+    document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    clearErrors();
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+
+    if (!email) { document.getElementById('emailError').classList.add('show'); return; }
+    if (!password) { document.getElementById('passwordError').classList.add('show'); return; }
+
+    const btn = document.getElementById('loginBtn');
+    btn.innerHTML = '<span class="spinner"></span> Anmelden...';
+    btn.disabled = true;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast('Erfolgreich angemeldet!', 'success');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+    } catch (err) {
+      btn.textContent = 'Anmelden';
+      btn.disabled = false;
+      const msgs = {
+        'auth/user-not-found': 'Kein Konto mit dieser E-Mail gefunden.',
+        'auth/wrong-password': 'Falsches Passwort.',
+        'auth/invalid-credential': 'E-Mail oder Passwort falsch.',
+        'auth/too-many-requests': 'Zu viele Versuche. Bitte später erneut versuchen.',
+        'auth/invalid-email': 'Ungültige E-Mail-Adresse.',
+      };
+      toast(msgs[err.code] || `Fehler: ${err.message}`, 'error');
+    }
+  });
+
+  document.querySelectorAll('.form-control').forEach(el => {
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+  });
+</script>
+</body>
+</html>
