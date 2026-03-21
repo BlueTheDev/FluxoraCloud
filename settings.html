@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Einstellungen – FluxoraCloud</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='white'>☁</text></svg>" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">☁</div>FluxoraCloud</a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="files.html">Dateien</a></li>
+      <li><a href="upgrade.html">Upgrade</a></li>
+      <li><a href="settings.html" class="active">Einstellungen</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle">🌙</button>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Abmelden</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:36px;padding-bottom:60px;">
+  <div class="dashboard-grid">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="sidebar-item"><span class="icon">🏠</span> Übersicht</a>
+      <a href="files.html" class="sidebar-item"><span class="icon">📁</span> Meine Dateien</a>
+      <a href="upload.html" class="sidebar-item"><span class="icon">⬆️</span> Hochladen</a>
+      <div class="sidebar-divider"></div>
+      <a href="upgrade.html" class="sidebar-item"><span class="icon">⭐</span> Upgrade</a>
+      <a href="settings.html" class="sidebar-item active"><span class="icon">⚙️</span> Einstellungen</a>
+    </aside>
+
+    <div class="dash-content">
+      <div style="margin-bottom:28px;">
+        <h1 style="font-size:1.5rem;font-weight:800;">Einstellungen</h1>
+        <p style="font-size:14px;color:var(--text-2);margin-top:2px;">Konto- und App-Einstellungen verwalten.</p>
+      </div>
+
+      <!-- Profile -->
+      <div class="settings-section">
+        <h3>Profil</h3>
+        <p class="desc">Deine persönlichen Informationen</p>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Name</strong>
+            <span id="profileName">Wird geladen...</span>
+          </div>
+          <button class="btn btn-outline btn-sm" id="editNameBtn">Ändern</button>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>E-Mail</strong>
+            <span id="profileEmail">Wird geladen...</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Mitglied seit</strong>
+            <span id="profileCreated">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan -->
+      <div class="settings-section">
+        <h3>Mein Plan</h3>
+        <p class="desc">Dein aktueller Speicherplan</p>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Aktiver Plan</strong>
+            <span><span id="planBadge" class="plan-badge free">Free</span></span>
+          </div>
+          <a href="upgrade.html" class="btn btn-primary btn-sm">Upgraden</a>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Gespeicherter Speicher</strong>
+            <span id="settingsStorage">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-section">
+        <h3>Darstellung</h3>
+        <p class="desc">Design und Anzeigeeinstellungen</p>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Farbschema</strong>
+            <span id="themeLabel">Hell</span>
+          </div>
+          <button class="btn btn-outline btn-sm" id="themeToggle2">🌙 Dark Mode</button>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="settings-section" style="border-color:var(--danger)22;">
+        <h3 style="color:var(--danger);">Gefahrenzone</h3>
+        <p class="desc">Irreversible Aktionen – bitte mit Vorsicht verwenden.</p>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Alle Dateien löschen</strong>
+            <span>Löscht alle deine hochgeladenen Dateien</span>
+          </div>
+          <button class="btn btn-danger btn-sm" id="deleteAllBtn">Alle löschen</button>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <strong>Konto löschen</strong>
+            <span>Dein Konto und alle Daten werden permanent gelöscht</span>
+          </div>
+          <button class="btn btn-danger btn-sm" id="deleteAccountBtn">Konto löschen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Name Modal -->
+<div class="modal-overlay" id="editNameModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Name ändern</span>
+      <button class="modal-close" id="closeNameModal">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Neuer Name</label>
+      <input type="text" class="form-control" id="newNameInput" placeholder="Dein Name" />
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" id="saveNameBtn">Speichern</button>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script type="module">
+  import { auth, db, ref, update, get, remove, onAuthStateChanged, signOut, updateProfile, initTheme, toggleTheme, toast, PLANS, formatBytes, formatDate } from '../js/firebase.js';
+
+  initTheme();
+  const themeBtn = document.getElementById('themeToggle');
+  themeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+
+  function syncThemeDisplay() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeBtn.textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('themeLabel').textContent = isDark ? 'Dunkel' : 'Hell';
+    document.getElementById('themeToggle2').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  themeBtn.addEventListener('click', () => { toggleTheme(); syncThemeDisplay(); });
+  document.getElementById('themeToggle2').addEventListener('click', () => { toggleTheme(); syncThemeDisplay(); });
+  syncThemeDisplay();
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => { await signOut(auth); window.location.href = '../index.html'; });
+
+  const editModal = document.getElementById('editNameModal');
+  document.getElementById('editNameBtn').onclick = () => editModal.classList.add('open');
+  document.getElementById('closeNameModal').onclick = () => editModal.classList.remove('open');
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'login.html'; return; }
+
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('profileName').textContent = user.displayName || '—';
+    document.getElementById('newNameInput').value = user.displayName || '';
+
+    const snap = await get(ref(db, `users/${user.uid}`));
+    if (snap.exists()) {
+      const data = snap.val();
+      const plan = PLANS[data.plan] || PLANS.free;
+      const used = data.storageUsed || 0;
+      const limit = data.storageLimit || plan.storage;
+
+      const badge = document.getElementById('planBadge');
+      badge.textContent = plan.name;
+      badge.className = `plan-badge ${data.plan}`;
+      document.getElementById('settingsStorage').textContent = `${formatBytes(used * 1024)} / ${formatBytes(limit * 1024)} (${((used/limit)*100).toFixed(1)}%)`;
+      document.getElementById('profileCreated').textContent = formatDate(data.createdAt);
+    }
+
+    document.getElementById('saveNameBtn').addEventListener('click', async () => {
+      const newName = document.getElementById('newNameInput').value.trim();
+      if (!newName) { toast('Name darf nicht leer sein.', 'error'); return; }
+      try {
+        await updateProfile(user, { displayName: newName });
+        await update(ref(db, `users/${user.uid}`), { name: newName });
+        document.getElementById('profileName').textContent = newName;
+        editModal.classList.remove('open');
+        toast('Name erfolgreich geändert!', 'success');
+      } catch(err) {
+        toast('Fehler: ' + err.message, 'error');
+      }
+    });
+
+    document.getElementById('deleteAllBtn').addEventListener('click', async () => {
+      if (!confirm('Wirklich ALLE Dateien löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) return;
+      try {
+        await remove(ref(db, `users/${user.uid}/files`));
+        await update(ref(db, `users/${user.uid}`), { storageUsed: 0 });
+        toast('Alle Dateien gelöscht.', 'success');
+      } catch(err) {
+        toast('Fehler: ' + err.message, 'error');
+      }
+    });
+
+    document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+      if (!confirm('Wirklich das gesamte Konto löschen? ALLE Daten werden permanent entfernt.')) return;
+      try {
+        await remove(ref(db, `users/${user.uid}`));
+        await user.delete();
+        toast('Konto gelöscht.', 'success');
+        setTimeout(() => { window.location.href = '../index.html'; }, 1500);
+      } catch(err) {
+        if (err.code === 'auth/requires-recent-login') {
+          toast('Bitte melde dich neu an, um das Konto zu löschen.', 'error');
+        } else {
+          toast('Fehler: ' + err.message, 'error');
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
