@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passwort zurücksetzen – FluxoraCloud</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='white'>☁</text></svg>" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="logo-icon">☁</div>FluxoraCloud</a>
+    <div class="nav-actions" style="margin-left:auto;">
+      <button class="theme-btn" id="themeToggle">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="card">
+      <div class="auth-logo">
+        <div class="logo-icon">🔑</div>
+        <h2>Passwort zurücksetzen</h2>
+        <p>Wir schicken dir einen Reset-Link</p>
+      </div>
+
+      <div id="formView">
+        <div class="form-group">
+          <label>E-Mail-Adresse</label>
+          <input type="email" id="emailInput" class="form-control" placeholder="max@example.com" />
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" id="resetBtn">Reset-Link senden</button>
+        <div class="auth-switch"><a href="login.html">← Zurück zur Anmeldung</a></div>
+      </div>
+
+      <div id="successView" class="hidden" style="text-align:center;padding:20px 0;">
+        <div style="font-size:40px;margin-bottom:12px;">📬</div>
+        <h3 style="margin-bottom:8px;">E-Mail gesendet!</h3>
+        <p style="font-size:14px;color:var(--text-2);margin-bottom:20px;">Prüfe dein Postfach und klicke auf den Reset-Link.</p>
+        <a href="login.html" class="btn btn-outline" style="width:100%;justify-content:center;">Zurück zur Anmeldung</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script type="module">
+  import { auth, sendPasswordResetEmail, initTheme, toggleTheme, toast } from '../js/firebase.js';
+  initTheme();
+  const themeBtn = document.getElementById('themeToggle');
+  themeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => { themeBtn.textContent = toggleTheme() === 'dark' ? '☀️' : '🌙'; });
+
+  document.getElementById('resetBtn').addEventListener('click', async () => {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) { toast('Bitte E-Mail eingeben.', 'error'); return; }
+    const btn = document.getElementById('resetBtn');
+    btn.innerHTML = '<span class="spinner"></span> Senden...';
+    btn.disabled = true;
+    try {
+      await sendPasswordResetEmail(auth, email);
+      document.getElementById('formView').classList.add('hidden');
+      document.getElementById('successView').classList.remove('hidden');
+    } catch(err) {
+      btn.textContent = 'Reset-Link senden';
+      btn.disabled = false;
+      toast(err.code === 'auth/user-not-found' ? 'Kein Konto mit dieser E-Mail.' : 'Fehler beim Senden.', 'error');
+    }
+  });
+</script>
+</body>
+</html>
