@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FluxoraCloud – Sicherer Cloud-Speicher</title>
+  <meta name="description" content="FluxoraCloud – Zuverlässiger, sicherer Cloud-Speicher. 5 GB kostenlos bei Registrierung." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='white'>☁</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">☁</div>
+      FluxoraCloud
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Preise</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-btn" id="themeToggle" title="Theme wechseln">🌙</button>
+      <a href="pages/login.html" class="btn btn-outline btn-sm">Anmelden</a>
+      <a href="pages/register.html" class="btn btn-primary btn-sm">Kostenlos starten</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      ✦ 5 GB kostenlos – kein Kreditkarte nötig
+    </div>
+    <h1>Dein Speicher.<br /><span>Deine Kontrolle.</span></h1>
+    <p>FluxoraCloud gibt dir schnellen, sicheren Cloud-Speicher für Dateien, Fotos und Dokumente – von überall erreichbar.</p>
+    <div class="hero-actions">
+      <a href="pages/register.html" class="btn btn-primary btn-lg">Jetzt kostenlos starten</a>
+      <a href="#pricing" class="btn btn-outline btn-lg">Preise ansehen</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>5 GB</strong>
+        <span>Kostenloser Speicher</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <strong>256-bit</strong>
+        <span>AES Verschlüsselung</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <strong>99.9%</strong>
+        <span>Verfügbarkeit</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <strong>1 TB+</strong>
+        <span>Max. Speicher</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL STORAGE GRAPHIC -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;max-width:680px;margin:0 auto;box-shadow:var(--shadow);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text);">Mein Speicher</div>
+          <div style="font-size:13px;color:var(--text-3);">FluxoraCloud Free</div>
+        </div>
+        <span class="plan-badge free">Free Plan</span>
+      </div>
+      <div class="storage-bar" style="height:12px;margin-bottom:10px;">
+        <div class="storage-bar-fill" style="width:28%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-3);">
+        <span>1.4 GB genutzt</span>
+        <span>5 GB gesamt</span>
+      </div>
+      <div style="border-top:1px solid var(--border);margin-top:20px;padding-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+        <div>
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">Dokumente</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);">342 MB</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">Fotos</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);">890 MB</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">Sonstiges</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);">168 MB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-center" style="margin-bottom:0;">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Alles, was du brauchst</h2>
+      <p class="section-desc">Leistungsstarke Tools für Einzelpersonen und Teams – ohne unnötige Komplexität.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Ende-zu-Ende Verschlüsselung</h3>
+        <p>Deine Dateien werden mit AES-256 verschlüsselt. Nur du hast Zugriff.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Blitzschneller Upload</h3>
+        <p>Optimierte Upload-Infrastruktur für maximale Geschwindigkeit, egal wie groß die Datei.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📂</div>
+        <h3>Ordner & Organisation</h3>
+        <p>Strukturiere deine Dateien mit Ordnern, Tags und Suche – immer den Überblick behalten.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Teilen mit einem Klick</h3>
+        <p>Generiere sichere Share-Links und teile Dateien mit Freunden oder Kollegen.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Alle Geräte</h3>
+        <p>Browser, Handy, Tablet – FluxoraCloud läuft überall ohne App-Installation.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">♻️</div>
+        <h3>Papierkorb & Verlauf</h3>
+        <p>Versehentlich gelöscht? Kein Problem. Dateien bleiben 30 Tage im Papierkorb.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-center" style="margin-bottom:0;">
+      <div class="section-label">Preise</div>
+      <h2 class="section-title">Einfache, faire Preise</h2>
+      <p class="section-desc">Starte kostenlos. Skaliere wenn du mehr brauchst. Keine versteckten Gebühren.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card">
+        <div class="pricing-name">Free</div>
+        <div class="pricing-price">€0 <span>/ Monat</span></div>
+        <div class="pricing-storage">5 GB Speicher</div>
+        <ul class="pricing-features">
+          <li>5 GB Cloud-Speicher</li>
+          <li>Unbegrenzte Dateien</li>
+          <li>Share-Links</li>
+          <li>30 Tage Papierkorb</li>
+          <li class="no">Prioritäts-Support</li>
+          <li class="no">Erweiterte Statistiken</li>
+        </ul>
+        <a href="pages/register.html" class="btn btn-outline">Kostenlos starten</a>
+      </div>
+
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="pricing-name">Starter</div>
+        <div class="pricing-price">€3.99 <span>/ Monat</span></div>
+        <div class="pricing-storage">50 GB Speicher</div>
+        <ul class="pricing-features">
+          <li>50 GB Cloud-Speicher</li>
+          <li>Unbegrenzte Dateien</li>
+          <li>Share-Links</li>
+          <li>30 Tage Papierkorb</li>
+          <li>E-Mail Support</li>
+          <li class="no">Erweiterte Statistiken</li>
+        </ul>
+        <a href="pages/register.html" class="btn btn-outline">Starter wählen</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card popular">
+        <div class="popular-badge">⭐ Beliebteste Wahl</div>
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price">€8.99 <span>/ Monat</span></div>
+        <div class="pricing-storage">200 GB Speicher</div>
+        <ul class="pricing-features">
+          <li>200 GB Cloud-Speicher</li>
+          <li>Unbegrenzte Dateien</li>
+          <li>Passwortgeschützte Links</li>
+          <li>90 Tage Papierkorb</li>
+          <li>Prioritäts-Support</li>
+          <li>Erweiterte Statistiken</li>
+        </ul>
+        <a href="pages/register.html" class="btn btn-primary">Pro wählen</a>
+      </div>
+
+      <!-- Business -->
+      <div class="pricing-card">
+        <div class="pricing-name">Business</div>
+        <div class="pricing-price">€24.99 <span>/ Monat</span></div>
+        <div class="pricing-storage">1 TB Speicher</div>
+        <ul class="pricing-features">
+          <li>1 TB Cloud-Speicher</li>
+          <li>Unbegrenzte Dateien</li>
+          <li>Passwortgeschützte Links</li>
+          <li>Unbegrenzter Papierkorb</li>
+          <li>24/7 Support</li>
+          <li>Vollständige Statistiken & API</li>
+        </ul>
+        <a href="pages/register.html" class="btn btn-outline">Business wählen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container" style="max-width:720px;">
+    <div class="section-center" style="margin-bottom:0;">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Häufige Fragen</h2>
+    </div>
+    <div style="margin-top:40px;display:flex;flex-direction:column;gap:4px;" id="faqList">
+      <div class="faq-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+        <button class="faq-btn" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Wie sicher sind meine Dateien?
+          <span class="faq-arrow" style="font-size:12px;color:var(--text-3);transition:transform 0.2s;">▼</span>
+        </button>
+        <div class="faq-body" style="display:none;padding:0 22px 18px;font-size:14px;color:var(--text-2);line-height:1.7;">
+          Alle Dateien werden mit AES-256 verschlüsselt und auf redundanten Servern gespeichert. Deine Daten sind nur für dich zugänglich.
+        </div>
+      </div>
+      <div class="faq-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+        <button class="faq-btn" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Kann ich meinen Plan jederzeit ändern?
+          <span class="faq-arrow" style="font-size:12px;color:var(--text-3);transition:transform 0.2s;">▼</span>
+        </button>
+        <div class="faq-body" style="display:none;padding:0 22px 18px;font-size:14px;color:var(--text-2);line-height:1.7;">
+          Ja! Du kannst jederzeit upgraden oder downgraden. Bei einem Downgrade bleibt dein aktueller Plan bis zum Ende des Abrechnungszeitraums aktiv.
+        </div>
+      </div>
+      <div class="faq-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+        <button class="faq-btn" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Gibt es eine Dateigrößen-Beschränkung?
+          <span class="faq-arrow" style="font-size:12px;color:var(--text-3);transition:transform 0.2s;">▼</span>
+        </button>
+        <div class="faq-body" style="display:none;padding:0 22px 18px;font-size:14px;color:var(--text-2);line-height:1.7;">
+          Free-Nutzer können Dateien bis zu 500 MB hochladen. Starter und Pro-Nutzer bis zu 5 GB, Business-Nutzer bis zu 25 GB pro Datei.
+        </div>
+      </div>
+      <div class="faq-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+        <button class="faq-btn" style="width:100%;padding:18px 22px;background:none;border:none;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Welche Zahlungsmethoden werden akzeptiert?
+          <span class="faq-arrow" style="font-size:12px;color:var(--text-3);transition:transform 0.2s;">▼</span>
+        </button>
+        <div class="faq-body" style="display:none;padding:0 22px 18px;font-size:14px;color:var(--text-2);line-height:1.7;">
+          Wir akzeptieren Kreditkarten (Visa, Mastercard, Amex), PayPal und SEPA-Lastschrift. Alle Zahlungen sind sicher und verschlüsselt.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div style="background:var(--accent);border-radius:var(--radius-lg);padding:56px 40px;text-align:center;color:white;">
+      <h2 style="font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;margin-bottom:12px;color:white;">Bereit? Starte jetzt kostenlos.</h2>
+      <p style="font-size:1rem;opacity:0.85;margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto;">5 GB gratis. Keine Kreditkarte. In weniger als einer Minute startklar.</p>
+      <a href="pages/register.html" style="display:inline-flex;align-items:center;gap:8px;background:white;color:var(--accent);padding:13px 28px;border-radius:var(--radius);font-family:'Syne',sans-serif;font-weight:700;font-size:15px;text-decoration:none;transition:all 0.18s ease;">
+        Kostenlos registrieren →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">☁ FluxoraCloud</div>
+      <ul class="footer-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Preise</a></li>
+        <li><a href="pages/login.html">Login</a></li>
+        <li><a href="pages/register.html">Registrieren</a></li>
+      </ul>
+    </div>
+    <div class="footer-copy">
+      © 2025 FluxoraCloud. Alle Rechte vorbehalten. · Datenschutz · Impressum · AGB
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script type="module">
+  import { initTheme, toggleTheme } from './js/firebase.js';
+
+  initTheme();
+  
+  const themeBtn = document.getElementById('themeToggle');
+  themeBtn.addEventListener('click', () => {
+    const t = toggleTheme();
+    themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+  });
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  themeBtn.textContent = isDark ? '☀️' : '🌙';
+
+  // FAQ
+  document.querySelectorAll('.faq-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.faq-arrow');
+      const isOpen = body.style.display === 'block';
+      body.style.display = isOpen ? 'none' : 'block';
+      arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+    });
+  });
+</script>
+</body>
+</html>
