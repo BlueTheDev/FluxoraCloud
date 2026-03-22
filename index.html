@@ -494,7 +494,7 @@ tbody tr:hover td { background: var(--bg2); }
             <li>Download-Links</li><li>30 Tage Papierkorb</li>
             <li>E-Mail Support</li><li class="no">Statistiken</li>
           </ul>
-          <button class="btn btn-outline" onclick="go('register')">Starter wählen</button>
+          <button class="btn btn-outline" onclick="go('register')">Starter aktivieren</button>
         </div>
         <div class="price-card pop">
           <div class="pop-label">Beliebteste Wahl</div>
@@ -506,7 +506,7 @@ tbody tr:hover td { background: var(--bg2); }
             <li>Download-Links</li><li>90 Tage Papierkorb</li>
             <li>Prioritäts-Support</li><li>Statistiken</li>
           </ul>
-          <button class="btn btn-primary" onclick="go('register')">Pro wählen</button>
+          <button class="btn btn-primary" onclick="go('register')">Pro aktivieren</button>
         </div>
         <div class="price-card">
           <div class="price-name">Business</div>
@@ -517,7 +517,7 @@ tbody tr:hover td { background: var(--bg2); }
             <li>Download-Links</li><li>Unbegrenzter Papierkorb</li>
             <li>24/7 Support</li><li>Statistiken & API</li>
           </ul>
-          <button class="btn btn-outline" onclick="go('register')">Business wählen</button>
+          <button class="btn btn-outline" onclick="go('register')">Business aktivieren</button>
         </div>
       </div>
     </div>
@@ -796,16 +796,17 @@ tbody tr:hover td { background: var(--bg2); }
 
 <div class="overlay" id="m-checkout">
   <div class="modal">
-    <div class="modal-head"><h3 id="co-title">Plan buchen</h3><button class="modal-close" onclick="closeM('m-checkout')">✕</button></div>
-    <p style="font-size:13px;color:var(--t2);margin-bottom:16px" id="co-desc">–</p>
-    <div class="fg"><label>Karteninhaber</label><input id="co-name" type="text" class="fc" placeholder="Max Mustermann"></div>
-    <div class="fg"><label>Kartennummer</label><input id="co-num" type="text" class="fc" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="this.value=this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim().slice(0,19)"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="fg"><label>Gültig bis</label><input id="co-exp" type="text" class="fc" placeholder="MM/JJ" maxlength="5" oninput="let v=this.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);this.value=v"></div>
-      <div class="fg"><label>CVC</label><input id="co-cvc" type="text" class="fc" placeholder="•••" maxlength="3"></div>
+    <div class="modal-head"><h3 id="co-title">Plan aktivieren</h3><button class="modal-close" onclick="closeM('m-checkout')">✕</button></div>
+    <p style="font-size:13px;color:var(--t2);margin-bottom:20px" id="co-desc">–</p>
+    <div class="fg">
+      <label>Aktivierungscode</label>
+      <input id="co-code" type="text" class="fc" placeholder="z.B. XZY-AZS-271" autocomplete="off"
+        style="font-size:16px;font-weight:700;letter-spacing:.08em;text-transform:uppercase"
+        oninput="this.value=this.value.toUpperCase()">
+      <div class="fhint">Du hast einen Code von FluxoraCloud erhalten.</div>
+      <div class="ferr on hidden" id="co-err">Ungültiger oder bereits verwendeter Code.</div>
     </div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center" id="co-btn" onclick="doCheckout()">Jetzt buchen</button>
-    <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:8px">🔒 Demo – keine echte Zahlung</p>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px" id="co-btn" onclick="doCheckout()">Code einlösen</button>
   </div>
 </div>
 
@@ -1263,7 +1264,7 @@ function renderPlans() {
       <button class="btn ${key===cur?'btn-outline':key==='pro'&&key!==cur?'btn-primary':'btn-outline'}"
         style="width:100%;justify-content:center" ${key===cur?'disabled':''}
         onclick="pickPlan('${key}','${p.name}','€${p.price > 0 ? p.price.toFixed(2) : 0}/Monat · ${p.gb>=1000?'1 TB':p.gb+' GB'} Speicher')">
-        ${key===cur?'✓ Aktueller Plan':key==='free'?'Kostenlos wechseln':p.name+' wählen'}
+        ${key===cur?'✓ Aktueller Plan':key==='free'?'Kostenlos wechseln':p.name+' aktivieren'}
       </button>
     </div>`).join("");
 }
@@ -1278,24 +1279,66 @@ function planFeats(k) {
 window.pickPlan = (plan, name, desc) => {
   if (plan === "free") { if(confirm("Zum Free-Plan wechseln?")) activatePlan("free"); return; }
   selPlan = plan;
-  setText("co-title", `${name} buchen`);
-  setText("co-desc", desc);
-  ["co-name","co-num","co-exp","co-cvc"].forEach(id => qs(`#${id}`).value="");
+  setText("co-title", `${name} aktivieren`);
+  setText("co-desc", `${desc} – Gib deinen Aktivierungscode ein.`);
+  qs("#co-code").value = "";
+  qs("#co-err").classList.add("hidden");
   openM("m-checkout");
 };
 
+// Codes: key = code, value = which plan it unlocks (or "any" for any plan)
+const REDEEM_CODES = {
+  "XZY-AZS-271": "any",
+  "AMQ-PQO-671": "any",
+  "ZAW-217-DUH": "any",
+  "712-AUD-AWD": "any",
+  "IOJ-ASQ-1232": "any",
+};
+
 window.doCheckout = async () => {
-  const n = qs("#co-name").value.trim();
-  const num = qs("#co-num").value.replace(/\s/g,"");
-  const exp = qs("#co-exp").value;
-  const cvc = qs("#co-cvc").value;
-  if (!n||num.length<16||exp.length<5||cvc.length<3) { toast("Bitte alle Felder ausfüllen.","er"); return; }
+  const code = qs("#co-code").value.trim().toUpperCase();
+  const errEl = qs("#co-err");
+  errEl.classList.add("hidden");
+
+  if (!code) { errEl.textContent="Bitte Code eingeben."; errEl.classList.remove("hidden"); return; }
+
   const btn = qs("#co-btn");
-  btn.innerHTML='<span class="spinner"></span> Verarbeitung...'; btn.disabled=true;
-  await new Promise(r=>setTimeout(r,1600));
-  await activatePlan(selPlan);
-  closeM("m-checkout");
-  btn.textContent="Jetzt buchen"; btn.disabled=false;
+  btn.innerHTML = '<span class="spinner"></span> Prüfen...'; btn.disabled = true;
+
+  // Check if code exists
+  if (!REDEEM_CODES[code]) {
+    btn.textContent = "Code einlösen"; btn.disabled = false;
+    errEl.textContent = "Ungültiger Code. Bitte prüfe die Schreibweise.";
+    errEl.classList.remove("hidden");
+    return;
+  }
+
+  // Check Firebase if code was already used
+  try {
+    const usedSnap = await get(ref(db, `usedCodes/${code.replace(/-/g,"_")}`));
+    if (usedSnap.exists()) {
+      btn.textContent = "Code einlösen"; btn.disabled = false;
+      errEl.textContent = "Dieser Code wurde bereits verwendet.";
+      errEl.classList.remove("hidden");
+      return;
+    }
+
+    // Mark code as used in Firebase
+    await set(ref(db, `usedCodes/${code.replace(/-/g,"_")}`), {
+      usedBy: user.uid,
+      usedAt: Date.now(),
+      plan: selPlan
+    });
+
+    // Activate plan
+    await activatePlan(selPlan);
+    closeM("m-checkout");
+    btn.textContent = "Code einlösen"; btn.disabled = false;
+
+  } catch(err) {
+    btn.textContent = "Code einlösen"; btn.disabled = false;
+    toast("Fehler: " + err.message, "er");
+  }
 };
 
 async function activatePlan(plan) {
