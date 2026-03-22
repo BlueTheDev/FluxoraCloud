@@ -282,8 +282,8 @@ footer { border-top: 1px solid var(--border); padding: 28px 0; margin-top: 56px;
 .dash-main { min-height: 400px; }
 
 /* DASH TABS */
-.tab { display: none; }
-.tab.on { display: block; }
+.tab { display: block; }
+.tab.hidden { display: none !important; }
 
 /* STORAGE WIDGET */
 .stor-widget { background: var(--card); border: 1px solid var(--border); border-radius: var(--rl); padding: 18px; margin-bottom: 16px; }
@@ -487,7 +487,7 @@ tbody tr:hover td { background: var(--bg2); }
         </div>
         <div class="price-card">
           <div class="price-name">Starter</div>
-          <div class="price-amount">€3.99 <span>/ Monat</span></div>
+          <div class="price-amount">€1.99 <span>/ Monat</span></div>
           <div class="price-storage">50 GB Speicher</div>
           <ul class="price-list">
             <li>50 GB Cloud-Speicher</li><li>Unbegrenzte Dateien</li>
@@ -499,7 +499,7 @@ tbody tr:hover td { background: var(--bg2); }
         <div class="price-card pop">
           <div class="pop-label">Beliebteste Wahl</div>
           <div class="price-name">Pro</div>
-          <div class="price-amount">€8.99 <span>/ Monat</span></div>
+          <div class="price-amount">€6.99 <span>/ Monat</span></div>
           <div class="price-storage">200 GB Speicher</div>
           <ul class="price-list">
             <li>200 GB Cloud-Speicher</li><li>Unbegrenzte Dateien</li>
@@ -510,7 +510,7 @@ tbody tr:hover td { background: var(--bg2); }
         </div>
         <div class="price-card">
           <div class="price-name">Business</div>
-          <div class="price-amount">€24.99 <span>/ Monat</span></div>
+          <div class="price-amount">€22.99 <span>/ Monat</span></div>
           <div class="price-storage">1 TB Speicher</div>
           <ul class="price-list">
             <li>1 TB Cloud-Speicher</li><li>Unbegrenzte Dateien</li>
@@ -650,7 +650,7 @@ tbody tr:hover td { background: var(--bg2); }
     <div class="dash-main">
 
       <!-- OVERVIEW -->
-      <div id="tab-overview" class="tab on">
+      <div id="tab-overview" class="tab">
         <div style="margin-bottom:18px">
           <h1 style="font-size:20px;font-weight:700">Hallo, <span id="greet-name">...</span> 👋</h1>
           <p style="font-size:13px;color:var(--t2);margin-top:3px">Deine Speicher-Übersicht</p>
@@ -835,9 +835,9 @@ const db = getDatabase(app);
 // ── PLANS ──
 const PLANS = {
   free:     { name:"Free",     gb:5,    price:0,     mb:5*1024 },
-  starter:  { name:"Starter",  gb:50,   price:3.99,  mb:50*1024 },
-  pro:      { name:"Pro",      gb:200,  price:8.99,  mb:200*1024 },
-  business: { name:"Business", gb:1000, price:24.99, mb:1000*1024 },
+  starter:  { name:"Starter",  gb:50,   price:1.99,  mb:50*1024 },
+  pro:      { name:"Pro",      gb:200,  price:6.99,  mb:200*1024 },
+  business: { name:"Business", gb:1000, price:22.99, mb:1000*1024 },
 };
 
 // ── HELPERS ──
@@ -885,23 +885,34 @@ applyTheme();
 let curPage = "home";
 window.go = page => {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("on"));
-  qs(`#pg-${page}`).classList.add("on");
+  document.getElementById(`pg-${page}`).classList.add("on");
   curPage = page;
   window.scrollTo(0, 0);
   document.querySelectorAll(".nav-links a").forEach(a => a.classList.remove("act"));
   if (page === "home") qs("#nl-home").classList.add("act");
-  if (page === "dash") { qs("#nl-dash").classList.add("act"); showTab("overview"); }
+  if (page === "dash") {
+    qs("#nl-dash").classList.add("act");
+    // Make sure overview is visible, all others hidden
+    TABS.forEach(t => {
+      const el = document.getElementById(`tab-${t}`);
+      if (el) el.classList.toggle("hidden", t !== "overview");
+    });
+    document.querySelectorAll(".sidebar .si").forEach((b,i) => b.classList.toggle("act", i === 0));
+  }
   // reset forms
-  if (page === "register") qsa("#r-name,#r-email,#r-pw,#r-pw2").forEach(i=>i.value="");
-  if (page === "login")    qsa("#l-email,#l-pw").forEach(i=>i.value="");
+  if (page === "register") document.querySelectorAll("#r-name,#r-email,#r-pw,#r-pw2").forEach(i=>i.value="");
+  if (page === "login")    document.querySelectorAll("#l-email,#l-pw").forEach(i=>i.value="");
 };
 function qsa(sel) { return [...document.querySelectorAll(sel)]; }
 
 // ── TABS ──
 const TABS = ["overview","files","upload","upgrade","settings"];
 window.showTab = tab => {
-  TABS.forEach(t => qs(`#tab-${t}`).classList.toggle("hidden", t!==tab));
-  qsa(".sidebar .si").forEach((b,i) => b.classList.toggle("act", i===TABS.indexOf(tab)));
+  TABS.forEach(t => {
+    const el = document.getElementById(`tab-${t}`);
+    if (el) el.classList.toggle("hidden", t !== tab);
+  });
+  document.querySelectorAll(".sidebar .si").forEach((b,i) => b.classList.toggle("act", i === TABS.indexOf(tab)));
   if (tab === "upgrade") renderPlans();
 };
 
@@ -1251,7 +1262,7 @@ function renderPlans() {
       <ul class="price-list">${planFeats(key).map(f=>`<li ${f.no?'class="no"':''}>${f.t}</li>`).join('')}</ul>
       <button class="btn ${key===cur?'btn-outline':key==='pro'&&key!==cur?'btn-primary':'btn-outline'}"
         style="width:100%;justify-content:center" ${key===cur?'disabled':''}
-        onclick="pickPlan('${key}','${p.name}','€${p.price}/Monat · ${p.gb>=1000?'1 TB':p.gb+' GB'} Speicher')">
+        onclick="pickPlan('${key}','${p.name}','€${p.price > 0 ? p.price.toFixed(2) : 0}/Monat · ${p.gb>=1000?'1 TB':p.gb+' GB'} Speicher')">
         ${key===cur?'✓ Aktueller Plan':key==='free'?'Kostenlos wechseln':p.name+' wählen'}
       </button>
     </div>`).join("");
