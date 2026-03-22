@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FluxoraCloud – Sicherer Cloud-Speicher</title>
+<meta name="description" content="FluxoraCloud – Zuverlässiger Cloud-Speicher. 5 GB kostenlos bei Registrierung." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f7f6f3;
+  --bg2: #eeecea;
+  --card: #ffffff;
+  --border: #e0ddd8;
+  --text: #18170f;
+  --text2: #65625b;
+  --text3: #a09d97;
+  --accent: #2563eb;
+  --accent-h: #1d4ed8;
+  --accent-s: #eff6ff;
+  --ok: #16a34a;
+  --err: #dc2626;
+  --r: 12px;
+  --rs: 8px;
+  --rl: 18px;
+  --sh: 0 4px 20px rgba(0,0,0,.07),0 1px 4px rgba(0,0,0,.04);
+  --sh2: 0 12px 48px rgba(0,0,0,.10),0 4px 12px rgba(0,0,0,.05);
+  --t: .17s ease;
+}
+[data-theme=dark] {
+  --bg: #0e0e0d;
+  --bg2: #181714;
+  --card: #1e1c1a;
+  --border: #2b2824;
+  --text: #f0ede8;
+  --text2: #a09c96;
+  --text3: #6b6760;
+  --accent: #3b82f6;
+  --accent-h: #60a5fa;
+  --accent-s: rgba(59,130,246,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;min-height:100vh;transition:background var(--t),color var(--t)}
+h1,h2,h3,h4,h5{font-family:'Syne',sans-serif;line-height:1.2;letter-spacing:-.02em}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-h)}
+img{max-width:100%}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.nav-i{max-width:1100px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;gap:24px}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);letter-spacing:-.03em;display:flex;align-items:center;gap:8px;cursor:pointer}
+.logo-ic{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0}
+.nav-links{display:flex;gap:2px;flex:1;list-style:none}
+.nav-links a{color:var(--text2);font-size:14px;font-weight:500;padding:6px 11px;border-radius:var(--rs);transition:all var(--t)}
+.nav-links a:hover,.nav-links a.act{color:var(--text);background:var(--bg2)}
+.nav-links a.act{font-weight:600}
+.nav-r{display:flex;align-items:center;gap:8px;margin-left:auto}
+.tbtn{width:36px;height:36px;border:1px solid var(--border);background:var(--card);border-radius:var(--rs);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;transition:all var(--t)}
+.tbtn:hover{background:var(--bg2);color:var(--text)}
+/* NAV mobile */
+.ham{display:none;width:36px;height:36px;border:1px solid var(--border);background:var(--card);border-radius:var(--rs);cursor:pointer;align-items:center;justify-content:center;font-size:18px;color:var(--text2)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all var(--t);white-space:nowrap;text-decoration:none}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:var(--accent-h);color:#fff;transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.32)}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-o:hover{background:var(--bg2);color:var(--text)}
+.btn-g{background:transparent;color:var(--text2)}
+.btn-g:hover{background:var(--bg2);color:var(--text)}
+.btn-d{background:var(--err);color:#fff}
+.btn-d:hover{background:#b91c1c;color:#fff}
+.btn-lg{padding:12px 26px;font-size:15px;border-radius:var(--r)}
+.btn-sm{padding:6px 13px;font-size:13px}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+
+/* CONTAINER */
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* PAGES */
+.page{display:none}
+.page.on{display:block}
+
+/* ===== LANDING ===== */
+.hero{padding:76px 0 56px;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-s);color:var(--accent);border:1px solid rgba(37,99,235,.18);padding:5px 13px;border-radius:100px;font-size:13px;font-weight:500;margin-bottom:22px}
+.hero h1{font-size:clamp(2.4rem,6vw,3.8rem);font-weight:800;max-width:740px;margin:0 auto 18px}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:1.05rem;color:var(--text2);max-width:520px;margin:0 auto 34px;font-weight:300;line-height:1.75}
+.hero-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap}
+.hero-stat strong{display:block;font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800}
+.hero-stat span{font-size:12px;color:var(--text3)}
+.hdiv{width:1px;height:34px;background:var(--border)}
+
+/* PREVIEW CARD */
+.prev-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:28px;max-width:660px;margin:0 auto;box-shadow:var(--sh)}
+.prev-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.prev-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem}
+.sb{height:10px;background:var(--bg2);border-radius:100px;overflow:hidden;margin-bottom:8px}
+.sb-fill{height:100%;background:var(--accent);border-radius:100px}
+.sb-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text3)}
+.prev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;padding-top:18px;border-top:1px solid var(--border);text-align:center}
+.prev-grid .lb{font-size:12px;color:var(--text3);margin-bottom:4px}
+.prev-grid .vl{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem}
+
+/* SECTION */
+.sec{padding:68px 0}
+.sec-lbl{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.sec-h{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800;margin-bottom:14px}
+.sec-d{font-size:1rem;color:var(--text2);max-width:500px;font-weight:300;line-height:1.75}
+.sec-c{text-align:center}.sec-c .sec-d{margin:0 auto}
+
+/* FEATURES */
+.feat-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;margin-top:44px}
+.feat-c{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:26px;transition:all var(--t)}
+.feat-c:hover{transform:translateY(-2px);box-shadow:var(--sh);border-color:rgba(37,99,235,.22)}
+.feat-ic{width:42px;height:42px;background:var(--accent-s);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:14px}
+.feat-c h3{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.feat-c p{font-size:14px;color:var(--text2);line-height:1.6}
+
+/* PRICING */
+.price-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:44px;max-width:980px;margin-left:auto;margin-right:auto}
+.price-c{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:30px;position:relative;transition:all var(--t)}
+.price-c.pop{border-color:var(--accent);box-shadow:0 0 0 1px rgba(37,99,235,.25)}
+.price-c:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.pop-b{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:12px;font-weight:600;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.price-n{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.02em}
+.price-p{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;line-height:1;margin-bottom:4px}
+.price-p span{font-size:.95rem;color:var(--text3);font-weight:400}
+.price-s{font-size:13px;color:var(--text2);margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.price-f{list-style:none;margin-bottom:24px}
+.price-f li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text2);padding:5px 0}
+.price-f li::before{content:'✓';color:var(--ok);font-weight:700;font-size:12px;flex-shrink:0}
+.price-f li.no::before{content:'✗';color:var(--text3)}
+.price-f li.no{color:var(--text3)}
+.price-c .btn{width:100%;justify-content:center}
+
+/* FAQ */
+.faq-i{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:4px}
+.faq-btn{width:100%;padding:17px 22px;background:none;border:none;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:14.5px;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-btn span{font-size:11px;color:var(--text3);transition:transform .2s;flex-shrink:0}
+.faq-body{display:none;padding:0 22px 16px;font-size:14px;color:var(--text2);line-height:1.7}
+
+/* CTA */
+.cta{background:var(--accent);border-radius:var(--rl);padding:54px 40px;text-align:center;color:#fff}
+.cta h2{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;margin-bottom:10px;color:#fff}
+.cta p{opacity:.85;margin-bottom:26px;max-width:440px;margin-left:auto;margin-right:auto;font-size:1rem}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--accent);padding:13px 28px;border-radius:var(--r);font-family:'Syne',sans-serif;font-weight:700;font-size:15px;text-decoration:none;transition:all var(--t);cursor:pointer;border:none}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+
+/* FOOTER */
+.foot{border-top:1px solid var(--border);padding:36px 0;margin-top:72px}
+.foot-i{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.foot-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px}
+.foot-links{display:flex;gap:18px;list-style:none}
+.foot-links a{font-size:13px;color:var(--text3);transition:color var(--t)}
+.foot-links a:hover{color:var(--text2)}
+.foot-copy{font-size:12px;color:var(--text3);text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+
+/* ===== AUTH ===== */
+.auth-wrap{min-height:calc(100vh - 58px);display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.auth-box{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:40px;box-shadow:var(--sh)}
+.auth-top{text-align:center;margin-bottom:26px}
+.auth-top .aic{width:46px;height:46px;background:var(--accent);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:22px;margin-bottom:10px}
+.auth-top h2{font-size:1.25rem;font-weight:800}
+.auth-top p{font-size:14px;color:var(--text2);margin-top:4px}
+.auth-sw{text-align:center;margin-top:18px;font-size:14px;color:var(--text2)}
+
+/* FORMS */
+.fg{margin-bottom:18px}
+.fg label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.fc{width:100%;padding:10px 13px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);transition:all var(--t);outline:none}
+.fc:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.fc::placeholder{color:var(--text3)}
+.fe{font-size:12px;color:var(--err);margin-top:5px;display:none}
+.fe.on{display:block}
+.fh{font-size:12px;color:var(--text3);margin-top:5px}
+.info-box{background:var(--accent-s);border:1px solid rgba(37,99,235,.18);border-radius:var(--rs);padding:11px 14px;font-size:13px;color:var(--accent);display:flex;align-items:center;gap:8px;margin-top:14px}
+
+/* ===== DASHBOARD ===== */
+.dash-wrap{max-width:1100px;margin:0 auto;padding:32px 24px 64px;display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}
+.sidebar{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:6px;position:sticky;top:72px}
+.si{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:var(--rs);color:var(--text2);font-size:13.5px;font-weight:500;cursor:pointer;transition:all var(--t);text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.si:hover{background:var(--bg2);color:var(--text)}
+.si.act{background:var(--accent-s);color:var(--accent)}
+.si .ic{font-size:15px}
+.sdiv{height:1px;background:var(--border);margin:5px 7px}
+.dash-main{min-height:400px}
+
+/* STORAGE WIDGET */
+.sw{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:22px;margin-bottom:20px}
+.sw-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sw-bar{height:9px;background:var(--bg2);border-radius:100px;overflow:hidden;margin-bottom:7px}
+.sw-fill{height:100%;background:var(--accent);border-radius:100px;transition:width .6s ease}
+.sw-fill.warn{background:#f59e0b}
+.sw-fill.err{background:var(--err)}
+.sw-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text3)}
+
+/* STAT CARDS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px;margin-bottom:22px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.sc .lb{font-size:12px;color:var(--text3);margin-bottom:5px;font-weight:500}
+.sc .vl{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800}
+
+/* FILE TABLE */
+.fs{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.fs-h{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--border)}
+.fs-h h3{font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;font-size:11.5px;font-weight:600;color:var(--text3);padding:10px 22px;background:var(--bg2);border-bottom:1px solid var(--border);letter-spacing:.04em;text-transform:uppercase}
+tbody td{padding:13px 22px;font-size:13.5px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--bg2)}
+.fn{display:flex;align-items:center;gap:9px;color:var(--text);font-weight:500}
+.fic{font-size:17px;flex-shrink:0}
+.fac{display:flex;gap:3px;justify-content:flex-end}
+
+/* UPLOAD */
+.uz{border:2px dashed var(--border);border-radius:var(--rl);padding:48px 24px;text-align:center;cursor:pointer;transition:all var(--t);background:var(--card);margin-bottom:20px}
+.uz:hover,.uz.over{border-color:var(--accent);background:var(--accent-s)}
+.uz .uic{font-size:38px;margin-bottom:10px}
+.uz h3{font-size:15px;margin-bottom:6px}
+.uz p{font-size:13px;color:var(--text3)}
+
+/* PLAN BADGE */
+.pb{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600}
+.pb.free{background:var(--bg2);color:var(--text2)}
+.pb.starter{background:#d1fae5;color:#065f46}
+.pb.pro{background:#dbeafe;color:#1e40af}
+.pb.business{background:#fef3c7;color:#92400e}
+[data-theme=dark] .pb.starter{background:rgba(6,78,59,.3);color:#34d399}
+[data-theme=dark] .pb.pro{background:rgba(30,58,138,.3);color:#60a5fa}
+[data-theme=dark] .pb.business{background:rgba(120,53,15,.3);color:#fbbf24}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity var(--t)}
+.mo.on{opacity:1;pointer-events:all}
+.mb{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:30px;width:100%;max-width:440px;box-shadow:var(--sh2);transform:translateY(8px);transition:transform var(--t)}
+.mo.on .mb{transform:translateY(0)}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.mt{font-size:1.05rem;font-weight:700}
+.mc{width:28px;height:28px;border:none;background:var(--bg2);border-radius:6px;cursor:pointer;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all var(--t)}
+.mc:hover{background:var(--border);color:var(--text)}
+
+/* TOAST */
+#toast{position:fixed;top:68px;right:18px;z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.tk{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:11px 15px;box-shadow:var(--sh2);font-size:13.5px;min-width:230px;display:flex;align-items:center;gap:9px;animation:tin .2s ease;pointer-events:all}
+.tk.ok{border-left:3px solid var(--ok)}
+.tk.er{border-left:3px solid var(--err)}
+.tk.in{border-left:3px solid var(--accent)}
+@keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+
+/* SETTINGS */
+.ss{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:26px;margin-bottom:18px}
+.ss h3{font-size:15px;font-weight:700;margin-bottom:3px}
+.ss .sd{font-size:13px;color:var(--text3);margin-bottom:18px}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid var(--border);gap:16px}
+.si-info strong{display:block;font-size:14px;font-weight:500;margin-bottom:2px}
+.si-info span{font-size:13px;color:var(--text3)}
+
+/* EMPTY */
+.empty{text-align:center;padding:56px 24px;color:var(--text3)}
+.empty .ei{font-size:40px;margin-bottom:10px}
+.empty h3{font-size:15px;color:var(--text2);margin-bottom:6px}
+.empty p{font-size:13px;margin-bottom:18px}
+
+/* SPINNER */
+.sp{width:17px;height:17px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;opacity:.75}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.hidden{display:none!important}
+.sep{display:flex;align-items:center;gap:10px;margin:18px 0;color:var(--text3);font-size:12px}
+.sep::before,.sep::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .ham{display:flex}
+  .dash-wrap{grid-template-columns:1fr}
+  .sidebar{position:static;display:flex;flex-wrap:wrap;gap:3px}
+  .si{flex:1;min-width:110px;justify-content:center}
+  .sdiv{display:none}
+  .hero h1{font-size:2.1rem}
+  .hero-stats{gap:20px}
+  .hdiv{display:none}
+  .price-g{grid-template-columns:1fr}
+  .feat-g{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .auth-box{padding:28px 22px}
+  .cta{padding:36px 22px}
+  thead th:nth-child(3),tbody td:nth-child(3){display:none}
+}
+</style>
+</head>
+<body data-theme="">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-i">
+    <div class="logo" onclick="nav('home')">
+      <div class="logo-ic">☁</div>
+      FluxoraCloud
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" class="act" id="nl-home" onclick="nav('home');return false">Home</a></li>
+      <li><a href="#" id="nl-feat" onclick="nav('home');setTimeout(()=>document.getElementById('feat').scrollIntoView({behavior:'smooth'}),80);return false">Features</a></li>
+      <li><a href="#" id="nl-price" onclick="nav('home');setTimeout(()=>document.getElementById('pricing').scrollIntoView({behavior:'smooth'}),80);return false">Preise</a></li>
+      <li id="nl-dash-li" class="hidden"><a href="#" id="nl-dash" onclick="nav('dash');return false">Dashboard</a></li>
+    </ul>
+    <div class="nav-r">
+      <button class="tbtn" id="themeBtn" title="Theme">🌙</button>
+      <a href="#" class="btn btn-o btn-sm" id="navLogin" onclick="nav('login');return false">Anmelden</a>
+      <a href="#" class="btn btn-p btn-sm" id="navReg" onclick="nav('register');return false">Kostenlos starten</a>
+      <button class="btn btn-g btn-sm hidden" id="navLogout">Abmelden</button>
+    </div>
+    <button class="ham" id="hamBtn">☰</button>
+  </div>
+</nav>
+
+<div id="toast"></div>
+
+<!-- ===================== HOME ===================== -->
+<div id="pg-home" class="page on">
+  <section class="hero">
+    <div class="wrap">
+      <div class="badge">✦ 5 GB kostenlos – keine Kreditkarte nötig</div>
+      <h1>Dein Speicher.<br/><span>Deine Kontrolle.</span></h1>
+      <p>FluxoraCloud gibt dir schnellen, sicheren Cloud-Speicher für Dateien, Fotos und Dokumente – von überall erreichbar.</p>
+      <div class="hero-btns">
+        <button class="btn btn-p btn-lg" onclick="nav('register')">Jetzt kostenlos starten</button>
+        <button class="btn btn-o btn-lg" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Preise ansehen</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>5 GB</strong><span>Kostenloser Speicher</span></div>
+        <div class="hdiv"></div>
+        <div class="hero-stat"><strong>256-bit</strong><span>AES Verschlüsselung</span></div>
+        <div class="hdiv"></div>
+        <div class="hero-stat"><strong>99.9%</strong><span>Verfügbarkeit</span></div>
+        <div class="hdiv"></div>
+        <div class="hero-stat"><strong>1 TB+</strong><span>Max. Speicher</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="prev-card">
+        <div class="prev-top">
+          <div>
+            <div class="prev-title">Mein Speicher</div>
+            <div style="font-size:12px;color:var(--text3)">FluxoraCloud Free</div>
+          </div>
+          <span class="pb free">Free Plan</span>
+        </div>
+        <div class="sb"><div class="sb-fill" style="width:28%"></div></div>
+        <div class="sb-meta"><span>1.4 GB genutzt</span><span>5 GB gesamt</span></div>
+        <div class="prev-grid">
+          <div><div class="lb">Dokumente</div><div class="vl">342 MB</div></div>
+          <div><div class="lb">Fotos</div><div class="vl">890 MB</div></div>
+          <div><div class="lb">Sonstiges</div><div class="vl">168 MB</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="feat" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="wrap">
+      <div class="sec-c">
+        <div class="sec-lbl">Features</div>
+        <h2 class="sec-h">Alles, was du brauchst</h2>
+        <p class="sec-d">Leistungsstarke Tools für Einzelpersonen und Teams – ohne unnötige Komplexität.</p>
+      </div>
+      <div class="feat-g">
+        <div class="feat-c"><div class="feat-ic">🔒</div><h3>Ende-zu-Ende Verschlüsselung</h3><p>Deine Dateien werden mit AES-256 verschlüsselt. Nur du hast Zugriff.</p></div>
+        <div class="feat-c"><div class="feat-ic">⚡</div><h3>Blitzschneller Upload</h3><p>Optimierte Infrastruktur für maximale Geschwindigkeit, egal wie groß die Datei.</p></div>
+        <div class="feat-c"><div class="feat-ic">📂</div><h3>Ordner & Organisation</h3><p>Strukturiere deine Dateien mit Ordnern, Tags und Suche – immer den Überblick.</p></div>
+        <div class="feat-c"><div class="feat-ic">🔗</div><h3>Teilen mit einem Klick</h3><p>Generiere sichere Share-Links und teile Dateien mit Freunden oder Kollegen.</p></div>
+        <div class="feat-c"><div class="feat-ic">📱</div><h3>Alle Geräte</h3><p>Browser, Handy, Tablet – FluxoraCloud läuft überall ohne App-Installation.</p></div>
+        <div class="feat-c"><div class="feat-ic">♻️</div><h3>Papierkorb & Verlauf</h3><p>Versehentlich gelöscht? Kein Problem. Dateien bleiben 30 Tage im Papierkorb.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="pricing">
+    <div class="wrap">
+      <div class="sec-c">
+        <div class="sec-lbl">Preise</div>
+        <h2 class="sec-h">Einfache, faire Preise</h2>
+        <p class="sec-d">Starte kostenlos. Skaliere wenn du mehr brauchst. Keine versteckten Gebühren.</p>
+      </div>
+      <div class="price-g">
+        <div class="price-c">
+          <div class="price-n">Free</div>
+          <div class="price-p">€0 <span>/ Mo.</span></div>
+          <div class="price-s">5 GB Speicher</div>
+          <ul class="price-f">
+            <li>5 GB Cloud-Speicher</li><li>Unbegrenzte Dateien</li><li>Share-Links</li><li>30 Tage Papierkorb</li>
+            <li class="no">Prioritäts-Support</li><li class="no">Erweiterte Statistiken</li>
+          </ul>
+          <button class="btn btn-o" onclick="nav('register')">Kostenlos starten</button>
+        </div>
+        <div class="price-c">
+          <div class="price-n">Starter</div>
+          <div class="price-p">€3.99 <span>/ Mo.</span></div>
+          <div class="price-s">50 GB Speicher</div>
+          <ul class="price-f">
+            <li>50 GB Cloud-Speicher</li><li>Unbegrenzte Dateien</li><li>Share-Links</li><li>30 Tage Papierkorb</li>
+            <li>E-Mail Support</li><li class="no">Statistiken</li>
+          </ul>
+          <button class="btn btn-o" onclick="nav('register')">Starter wählen</button>
+        </div>
+        <div class="price-c pop">
+          <div class="pop-b">⭐ Beliebteste Wahl</div>
+          <div class="price-n">Pro</div>
+          <div class="price-p">€8.99 <span>/ Mo.</span></div>
+          <div class="price-s">200 GB Speicher</div>
+          <ul class="price-f">
+            <li>200 GB Cloud-Speicher</li><li>Unbegrenzte Dateien</li><li>Passwortgeschützte Links</li>
+            <li>90 Tage Papierkorb</li><li>Prioritäts-Support</li><li>Erweiterte Statistiken</li>
+          </ul>
+          <button class="btn btn-p" onclick="nav('register')">Pro wählen</button>
+        </div>
+        <div class="price-c">
+          <div class="price-n">Business</div>
+          <div class="price-p">€24.99 <span>/ Mo.</span></div>
+          <div class="price-s">1 TB Speicher</div>
+          <ul class="price-f">
+            <li>1 TB Cloud-Speicher</li><li>Unbegrenzte Dateien</li><li>Passwortgeschützte Links</li>
+            <li>Unbegrenzter Papierkorb</li><li>24/7 Support</li><li>Vollständige Statistiken & API</li>
+          </ul>
+          <button class="btn btn-o" onclick="nav('register')">Business wählen</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="wrap" style="max-width:700px">
+      <div class="sec-c"><div class="sec-lbl">FAQ</div><h2 class="sec-h">Häufige Fragen</h2></div>
+      <div style="margin-top:36px" id="faqList">
+        <div class="faq-i"><button class="faq-btn">Wie sicher sind meine Dateien?<span>▼</span></button><div class="faq-body">Alle Dateien werden mit AES-256 verschlüsselt und auf redundanten Servern gespeichert. Deine Daten sind nur für dich zugänglich.</div></div>
+        <div class="faq-i"><button class="faq-btn">Kann ich meinen Plan jederzeit ändern?<span>▼</span></button><div class="faq-body">Ja! Du kannst jederzeit upgraden oder downgraden. Bei einem Downgrade bleibt dein aktueller Plan bis zum Ende des Abrechnungszeitraums aktiv.</div></div>
+        <div class="faq-i"><button class="faq-btn">Gibt es eine Dateigrößen-Beschränkung?<span>▼</span></button><div class="faq-body">Free-Nutzer können Dateien bis zu 500 MB hochladen. Starter & Pro bis zu 5 GB, Business bis zu 25 GB pro Datei.</div></div>
+        <div class="faq-i"><button class="faq-btn">Welche Zahlungsmethoden werden akzeptiert?<span>▼</span></button><div class="faq-body">Wir akzeptieren Kreditkarten (Visa, Mastercard, Amex), PayPal und SEPA-Lastschrift.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="cta">
+        <h2>Bereit? Starte jetzt kostenlos.</h2>
+        <p>5 GB gratis. Keine Kreditkarte. In weniger als einer Minute startklar.</p>
+        <button class="cta-btn" onclick="nav('register')">Kostenlos registrieren →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div class="foot-i">
+        <div class="foot-logo"><div class="logo-ic">☁</div>FluxoraCloud</div>
+        <ul class="foot-links">
+          <li><a href="#" onclick="document.getElementById('feat').scrollIntoView({behavior:'smooth'});return false">Features</a></li>
+          <li><a href="#" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'});return false">Preise</a></li>
+          <li><a href="#" onclick="nav('login');return false">Login</a></li>
+          <li><a href="#" onclick="nav('register');return false">Registrieren</a></li>
+        </ul>
+      </div>
+      <div class="foot-copy">© 2025 FluxoraCloud. Alle Rechte vorbehalten. · Datenschutz · Impressum · AGB</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== REGISTER ===================== -->
+<div id="pg-register" class="page">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-top">
+        <div class="aic">☁</div>
+        <h2>Konto erstellen</h2>
+        <p>5 GB Speicher kostenlos – sofort starten</p>
+      </div>
+      <div class="fg"><label>Name</label><input id="r-name" type="text" class="fc" placeholder="Max Mustermann" /><div class="fe" id="r-name-e">Bitte gib deinen Namen ein.</div></div>
+      <div class="fg"><label>E-Mail</label><input id="r-email" type="email" class="fc" placeholder="max@example.com" /><div class="fe" id="r-email-e">Ungültige E-Mail-Adresse.</div></div>
+      <div class="fg"><label>Passwort</label><input id="r-pw" type="password" class="fc" placeholder="Mindestens 8 Zeichen" /><div class="fh">Mindestens 8 Zeichen.</div><div class="fe" id="r-pw-e">Passwort zu kurz.</div></div>
+      <div class="fg"><label>Passwort bestätigen</label><input id="r-pw2" type="password" class="fc" placeholder="Wiederholen" /><div class="fe" id="r-pw2-e">Passwörter stimmen nicht überein.</div></div>
+      <div class="fg" style="margin-bottom:18px"><label style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;font-size:13px;color:var(--text2)"><input id="r-terms" type="checkbox" style="margin-top:3px;accent-color:var(--accent)" />Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutzerklärung</a>.</label><div class="fe" id="r-terms-e">AGB müssen akzeptiert werden.</div></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" id="r-btn" onclick="doRegister()">Konto erstellen</button>
+      <div class="info-box">☁ <span>Du erhältst <strong>5 GB kostenlosen Speicher</strong> direkt nach der Registrierung.</span></div>
+      <div class="auth-sw">Schon ein Konto? <a href="#" onclick="nav('login');return false">Jetzt anmelden</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="pg-login" class="page">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-top">
+        <div class="aic">☁</div>
+        <h2>Willkommen zurück</h2>
+        <p>Melde dich in deinem Konto an</p>
+      </div>
+      <div class="fg"><label>E-Mail</label><input id="l-email" type="email" class="fc" placeholder="max@example.com" /><div class="fe" id="l-email-e">E-Mail erforderlich.</div></div>
+      <div class="fg"><label style="display:flex;justify-content:space-between">Passwort <a href="#" onclick="nav('reset');return false" style="font-weight:400;font-size:12px">Vergessen?</a></label><input id="l-pw" type="password" class="fc" placeholder="Dein Passwort" /><div class="fe" id="l-pw-e">Passwort erforderlich.</div></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" id="l-btn" onclick="doLogin()">Anmelden</button>
+      <div class="auth-sw">Noch kein Konto? <a href="#" onclick="nav('register');return false">Kostenlos registrieren</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== RESET ===================== -->
+<div id="pg-reset" class="page">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-top">
+        <div class="aic">🔑</div>
+        <h2>Passwort zurücksetzen</h2>
+        <p>Wir schicken dir einen Reset-Link</p>
+      </div>
+      <div id="reset-form">
+        <div class="fg"><label>E-Mail</label><input id="rs-email" type="email" class="fc" placeholder="max@example.com" /></div>
+        <button class="btn btn-p" style="width:100%;justify-content:center" id="rs-btn" onclick="doReset()">Reset-Link senden</button>
+        <div class="auth-sw"><a href="#" onclick="nav('login');return false">← Zurück zur Anmeldung</a></div>
+      </div>
+      <div id="reset-ok" class="hidden" style="text-align:center;padding:16px 0">
+        <div style="font-size:38px;margin-bottom:10px">📬</div>
+        <h3 style="margin-bottom:6px">E-Mail gesendet!</h3>
+        <p style="font-size:14px;color:var(--text2);margin-bottom:18px">Prüfe dein Postfach und klicke auf den Reset-Link.</p>
+        <button class="btn btn-o" style="width:100%;justify-content:center" onclick="nav('login')">Zurück zur Anmeldung</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="pg-dash" class="page">
+  <div class="dash-wrap">
+    <aside class="sidebar">
+      <button class="si act" onclick="showTab('overview')"><span class="ic">🏠</span> Übersicht</button>
+      <button class="si" onclick="showTab('files')"><span class="ic">📁</span> Meine Dateien</button>
+      <button class="si" onclick="showTab('upload')"><span class="ic">⬆️</span> Hochladen</button>
+      <div class="sdiv"></div>
+      <button class="si" onclick="showTab('upgrade')"><span class="ic">⭐</span> Upgrade</button>
+      <button class="si" onclick="showTab('settings')"><span class="ic">⚙️</span> Einstellungen</button>
+    </aside>
+
+    <div class="dash-main">
+      <!-- OVERVIEW TAB -->
+      <div id="tab-overview">
+        <div style="margin-bottom:22px">
+          <h1 style="font-size:1.45rem;font-weight:800">Guten Tag, <span id="greet-name">...</span> 👋</h1>
+          <p style="font-size:13.5px;color:var(--text2);margin-top:3px">Hier ist deine Speicher-Übersicht.</p>
+        </div>
+        <div class="sw">
+          <div class="sw-h"><span style="font-weight:600;font-size:14px">Speicher</span><span id="ov-storage-info" style="font-size:13px;color:var(--text2)">—</span></div>
+          <div class="sw-bar"><div class="sw-fill" id="ov-bar" style="width:0%"></div></div>
+          <div class="sw-meta"><span id="ov-used-lbl">—</span><span><span id="ov-plan-badge" class="pb free">Free</span> · <a href="#" onclick="showTab('upgrade');return false" style="font-size:12px">Upgrade</a></span></div>
+        </div>
+        <div class="stats">
+          <div class="sc"><div class="lb">Dateien</div><div class="vl" id="ov-files">—</div></div>
+          <div class="sc"><div class="lb">Genutzt</div><div class="vl" id="ov-used">—</div></div>
+          <div class="sc"><div class="lb">Verbleibend</div><div class="vl" id="ov-free">—</div></div>
+          <div class="sc"><div class="lb">Plan</div><div class="vl" id="ov-plan" style="font-size:.95rem">—</div></div>
+        </div>
+        <div class="fs">
+          <div class="fs-h"><h3>Zuletzt hochgeladen</h3><button class="btn btn-g btn-sm" onclick="showTab('files')">Alle anzeigen →</button></div>
+          <div id="ov-recent"></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-p" onclick="showTab('upload')">⬆️ Datei hochladen</button>
+          <button class="btn btn-o" onclick="showTab('upgrade')">⭐ Plan upgraden</button>
+        </div>
+      </div>
+
+      <!-- FILES TAB -->
+      <div id="tab-files" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+          <div><h1 style="font-size:1.45rem;font-weight:800">Meine Dateien</h1><p id="file-count" style="font-size:13.5px;color:var(--text2);margin-top:2px">—</p></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="search" type="text" class="fc" placeholder="Suchen..." style="width:190px" oninput="filterFiles()" />
+            <button class="btn btn-p btn-sm" onclick="showTab('upload')">⬆️ Hochladen</button>
+          </div>
+        </div>
+        <div class="sw" style="padding:14px 18px;margin-bottom:18px">
+          <div class="sw-h" style="margin-bottom:7px"><span style="font-weight:600;font-size:13px">Speicher</span><span id="files-storage-info" style="font-size:13px;color:var(--text2)">—</span></div>
+          <div class="sw-bar" style="margin-bottom:0"><div class="sw-fill" id="files-bar" style="width:0%"></div></div>
+        </div>
+        <div class="fs"><div id="files-table"></div></div>
+      </div>
+
+      <!-- UPLOAD TAB -->
+      <div id="tab-upload" class="hidden">
+        <div style="margin-bottom:22px">
+          <h1 style="font-size:1.45rem;font-weight:800">Dateien hochladen</h1>
+          <p style="font-size:13.5px;color:var(--text2);margin-top:3px">Ziehe Dateien hierher oder klicke zum Auswählen.</p>
+        </div>
+        <div class="sw" style="padding:14px 18px;margin-bottom:18px">
+          <div class="sw-h" style="margin-bottom:7px"><span style="font-weight:600;font-size:13px">Speicher</span><span id="up-storage-info" style="font-size:13px;color:var(--text2)">—</span></div>
+          <div class="sw-bar" style="margin-bottom:0"><div class="sw-fill" id="up-bar" style="width:0%"></div></div>
+        </div>
+        <div class="uz" id="uz" onclick="document.getElementById('file-input').click()">
+          <div class="uic">☁️</div>
+          <h3>Dateien hierher ziehen</h3>
+          <p>oder <span style="color:var(--accent)">hier klicken</span> zum Auswählen</p>
+          <p style="margin-top:6px;font-size:12px">Alle Dateitypen · Max. 500 MB (Free)</p>
+          <input type="file" id="file-input" multiple style="display:none" onchange="addFiles(this.files)" />
+        </div>
+        <div id="file-queue" class="hidden">
+          <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">Ausgewählte Dateien</h3>
+          <div id="queue-list" style="display:flex;flex-direction:column;gap:7px"></div>
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <button class="btn btn-p" id="upload-btn" onclick="doUpload()">⬆️ Alle hochladen</button>
+            <button class="btn btn-o" onclick="clearQueue()">Leeren</button>
+          </div>
+        </div>
+        <div id="prog-wrap" class="hidden">
+          <div class="fs"><div class="fs-h"><h3>Upload-Verlauf</h3></div><div id="prog-list" style="padding:0 22px"></div></div>
+        </div>
+      </div>
+
+      <!-- UPGRADE TAB -->
+      <div id="tab-upgrade" class="hidden">
+        <div style="text-align:center;margin-bottom:36px">
+          <div class="sec-lbl">Dein Plan</div>
+          <h1 style="font-size:1.7rem;font-weight:800;margin-bottom:10px">Wähle deinen Speicherplan</h1>
+          <p style="color:var(--text2);font-size:14px">Aktuell: <span id="up-cur-badge" class="pb free">Free</span></p>
+        </div>
+        <div class="price-g" id="plan-cards" style="max-width:100%">
+          <!-- injected by JS -->
+        </div>
+        <p style="text-align:center;font-size:12px;color:var(--text3);margin-top:20px">✓ Kündigung jederzeit · ✓ Keine versteckten Kosten · ✓ SSL-gesichert</p>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" class="hidden">
+        <div style="margin-bottom:22px">
+          <h1 style="font-size:1.45rem;font-weight:800">Einstellungen</h1>
+          <p style="font-size:13.5px;color:var(--text2);margin-top:3px">Konto- und App-Einstellungen verwalten.</p>
+        </div>
+        <div class="ss">
+          <h3>Profil</h3><p class="sd">Deine persönlichen Informationen</p>
+          <div class="sr"><div class="si-info"><strong>Name</strong><span id="s-name">—</span></div><button class="btn btn-o btn-sm" onclick="openModal('name-modal')">Ändern</button></div>
+          <div class="sr"><div class="si-info"><strong>E-Mail</strong><span id="s-email">—</span></div></div>
+          <div class="sr"><div class="si-info"><strong>Mitglied seit</strong><span id="s-since">—</span></div></div>
+        </div>
+        <div class="ss">
+          <h3>Mein Plan</h3><p class="sd">Dein aktueller Speicherplan</p>
+          <div class="sr"><div class="si-info"><strong>Aktiver Plan</strong><span><span id="s-plan-badge" class="pb free">Free</span></span></div><button class="btn btn-p btn-sm" onclick="showTab('upgrade')">Upgraden</button></div>
+          <div class="sr"><div class="si-info"><strong>Speicher genutzt</strong><span id="s-storage">—</span></div></div>
+        </div>
+        <div class="ss">
+          <h3>Darstellung</h3><p class="sd">Design und Anzeigeeinstellungen</p>
+          <div class="sr"><div class="si-info"><strong>Farbschema</strong><span id="theme-label">Hell</span></div><button class="btn btn-o btn-sm" id="s-theme-btn" onclick="toggleTheme()">🌙 Dark Mode</button></div>
+        </div>
+        <div class="ss" style="border-color:rgba(220,38,38,.2)">
+          <h3 style="color:var(--err)">Gefahrenzone</h3><p class="sd">Irreversible Aktionen – bitte mit Vorsicht verwenden.</p>
+          <div class="sr"><div class="si-info"><strong>Alle Dateien löschen</strong><span>Löscht alle hochgeladenen Dateien</span></div><button class="btn btn-d btn-sm" onclick="deleteAllFiles()">Alle löschen</button></div>
+          <div class="sr"><div class="si-info"><strong>Konto löschen</strong><span>Permanent – alle Daten werden entfernt</span></div><button class="btn btn-d btn-sm" onclick="deleteAccount()">Konto löschen</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="name-modal">
+  <div class="mb">
+    <div class="mh"><span class="mt">Name ändern</span><button class="mc" onclick="closeModal('name-modal')">✕</button></div>
+    <div class="fg"><label>Neuer Name</label><input id="new-name" type="text" class="fc" placeholder="Dein Name" /></div>
+    <button class="btn btn-p" style="width:100%;justify-content:center" onclick="saveName()">Speichern</button>
+  </div>
+</div>
+
+<div class="mo" id="del-modal">
+  <div class="mb">
+    <div class="mh"><span class="mt">Datei löschen</span><button class="mc" onclick="closeModal('del-modal')">✕</button></div>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:22px">Bist du sicher? Diese Aktion kann nicht rückgängig gemacht werden.</p>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o" onclick="closeModal('del-modal')">Abbrechen</button>
+      <button class="btn btn-d" id="del-confirm">Löschen</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="checkout-modal">
+  <div class="mb">
+    <div class="mh"><span class="mt" id="co-title">Plan buchen</span><button class="mc" onclick="closeModal('checkout-modal')">✕</button></div>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:18px" id="co-desc">—</p>
+    <div class="fg"><label>Karteninhaber</label><input id="co-name" type="text" class="fc" placeholder="Max Mustermann" /></div>
+    <div class="fg"><label>Kartennummer</label><input id="co-num" type="text" class="fc" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="fmtCard(this)" /></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg"><label>Gültig bis</label><input id="co-exp" type="text" class="fc" placeholder="MM/JJ" maxlength="5" oninput="fmtExp(this)" /></div>
+      <div class="fg"><label>CVC</label><input id="co-cvc" type="text" class="fc" placeholder="•••" maxlength="3" /></div>
+    </div>
+    <button class="btn btn-p" style="width:100%;justify-content:center" id="co-btn" onclick="doCheckout()">Jetzt buchen</button>
+    <p style="font-size:12px;color:var(--text3);text-align:center;margin-top:8px">🔒 Demo-Modus – keine echte Zahlung</p>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, set, get, update, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyBgNiehD0PECNhj3BcT8aRzgN6Q1PyAiWI",
+  authDomain: "partexcloud.firebaseapp.com",
+  databaseURL: "https://partexcloud-default-rtdb.firebaseio.com",
+  projectId: "partexcloud",
+  storageBucket: "partexcloud.firebasestorage.app",
+  messagingSenderId: "708155275046",
+  appId: "1:708155275046:web:fa7d7d82a06878a8cc33e7"
+});
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+// ===== PLANS =====
+const PLANS = {
+  free:     { name:'Free',     storage:5*1024,      price:0,     label:'5 GB' },
+  starter:  { name:'Starter',  storage:50*1024,     price:3.99,  label:'50 GB' },
+  pro:      { name:'Pro',      storage:200*1024,    price:8.99,  label:'200 GB' },
+  business: { name:'Business', storage:1024*1024,   price:24.99, label:'1 TB' },
+};
+
+// ===== HELPERS =====
+function fmtBytes(kb) {
+  if (kb === 0) return '0 B';
+  const u = ['B','KB','MB','GB','TB'], i = Math.floor(Math.log(kb*1024)/Math.log(1024));
+  return (kb*1024/Math.pow(1024,i)).toFixed(i>1?1:0)+' '+u[i];
+}
+function fmtDate(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'});
+}
+function fileIcon(name) {
+  const e = name.split('.').pop().toLowerCase();
+  const m = {pdf:'📄',doc:'📝',docx:'📝',txt:'📃',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',gif:'🖼️',webp:'🖼️',svg:'🖼️',mp4:'🎬',mov:'🎬',mp3:'🎵',wav:'🎵',zip:'📦',rar:'📦',xls:'📊',xlsx:'📊',csv:'📊',ppt:'📋',pptx:'📋',js:'💻',ts:'💻',py:'💻',html:'💻',css:'💻',json:'💻'};
+  return m[e] || '📎';
+}
+
+// ===== TOAST =====
+window.toast = (msg, type='info', dur=3400) => {
+  const c = document.getElementById('toast');
+  const icons = {ok:'✓',er:'✕',in:'ℹ'};
+  const el = document.createElement('div');
+  el.className = `tk ${type}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span><span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(()=>el.remove(), dur);
+};
+
+// ===== THEME =====
+let darkMode = localStorage.getItem('fc-theme') === 'dark';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', darkMode?'dark':'light');
+  document.getElementById('themeBtn').textContent = darkMode ? '☀️' : '🌙';
+  const sl = document.getElementById('theme-label');
+  const sb = document.getElementById('s-theme-btn');
+  if (sl) sl.textContent = darkMode ? 'Dunkel' : 'Hell';
+  if (sb) sb.textContent = darkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+window.toggleTheme = () => { darkMode=!darkMode; localStorage.setItem('fc-theme',darkMode?'dark':'light'); applyTheme(); };
+document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+applyTheme();
+
+// ===== NAV =====
+let currentPage = 'home';
+window.nav = (page) => {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(`pg-${page}`).classList.add('on');
+  currentPage = page;
+  window.scrollTo(0,0);
+
+  // nav links
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('act'));
+
+  const isDash = ['dash','files','upload','upgrade','settings'].includes(page);
+  document.getElementById('navLogin').classList.toggle('hidden', isDash || !!auth.currentUser);
+  document.getElementById('navReg').classList.toggle('hidden', isDash || !!auth.currentUser);
+  document.getElementById('navLogout').classList.toggle('hidden', !auth.currentUser);
+  document.getElementById('nl-dash-li').classList.toggle('hidden', !auth.currentUser);
+
+  if (page === 'home') document.getElementById('nl-home').classList.add('act');
+  if (page === 'dash') { document.getElementById('nl-dash').classList.add('act'); showTab('overview'); }
+  if (page === 'register') { document.querySelectorAll('#r-name,#r-email,#r-pw,#r-pw2').forEach(i=>i.value=''); }
+  if (page === 'login') { document.querySelectorAll('#l-email,#l-pw').forEach(i=>i.value=''); }
+};
+
+// ===== MODALS =====
+window.openModal = id => document.getElementById(id).classList.add('on');
+window.closeModal = id => document.getElementById(id).classList.remove('on');
+document.querySelectorAll('.mo').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('on'); }));
+
+// ===== SIDEBAR TABS =====
+window.showTab = (tab) => {
+  ['overview','files','upload','upgrade','settings'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('hidden', t!==tab);
+  });
+  document.querySelectorAll('.sidebar .si').forEach(b=>b.classList.remove('act'));
+  const tabs = ['overview','files','upload','upgrade','settings'];
+  const si = document.querySelectorAll('.sidebar .si');
+  si[tabs.indexOf(tab)]?.classList.add('act');
+  if (tab==='upgrade') renderPlanCards();
+};
+
+// ===== AUTH STATE =====
+let userData = null;
+let filesUnsubscribe = null;
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    document.getElementById('navLogin').classList.add('hidden');
+    document.getElementById('navReg').classList.add('hidden');
+    document.getElementById('navLogout').classList.remove('hidden');
+    document.getElementById('nl-dash-li').classList.remove('hidden');
+
+    // Load user data
+    const snap = await get(ref(db, `users/${user.uid}`));
+    if (snap.exists()) {
+      userData = snap.val();
+    } else {
+      userData = { uid:user.uid, email:user.email, name:user.displayName||'', plan:'free', storageUsed:0, storageLimit:PLANS.free.storage, createdAt:Date.now(), files:{} };
+      await set(ref(db, `users/${user.uid}`), userData);
+    }
+
+    // Live listener
+    if (filesUnsubscribe) filesUnsubscribe();
+    filesUnsubscribe = onValue(ref(db, `users/${user.uid}`), snap => {
+      if (!snap.exists()) return;
+      userData = snap.val();
+      refreshDash(user);
+    });
+
+    if (currentPage === 'login' || currentPage === 'register') nav('dash');
+  } else {
+    userData = null;
+    document.getElementById('navLogin').classList.remove('hidden');
+    document.getElementById('navReg').classList.remove('hidden');
+    document.getElementById('navLogout').classList.add('hidden');
+    document.getElementById('nl-dash-li').classList.add('hidden');
+    if (['dash'].includes(currentPage)) nav('home');
+  }
+});
+
+document.getElementById('navLogout').addEventListener('click', async () => {
+  await signOut(auth);
+  nav('home');
+  toast('Erfolgreich abgemeldet.', 'ok');
+});
+
+// ===== REGISTER =====
+window.doRegister = async () => {
+  document.querySelectorAll('.fe').forEach(e=>e.classList.remove('on'));
+  const name=document.getElementById('r-name').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pw=document.getElementById('r-pw').value;
+  const pw2=document.getElementById('r-pw2').value;
+  const terms=document.getElementById('r-terms').checked;
+  let ok=true;
+  if(!name){document.getElementById('r-name-e').classList.add('on');ok=false}
+  if(!email||!email.includes('@')){document.getElementById('r-email-e').classList.add('on');ok=false}
+  if(pw.length<8){document.getElementById('r-pw-e').classList.add('on');ok=false}
+  if(pw!==pw2){document.getElementById('r-pw2-e').classList.add('on');ok=false}
+  if(!terms){document.getElementById('r-terms-e').classList.add('on');ok=false}
+  if(!ok) return;
+  const btn=document.getElementById('r-btn');
+  btn.innerHTML='<span class="sp"></span> Konto wird erstellt...';btn.disabled=true;
+  try {
+    const cred=await createUserWithEmailAndPassword(auth,email,pw);
+    await updateProfile(cred.user,{displayName:name});
+    const ud={uid:cred.user.uid,email,name,plan:'free',storageUsed:0,storageLimit:PLANS.free.storage,createdAt:Date.now()};
+    await set(ref(db,`users/${cred.user.uid}`),ud);
+    toast('Willkommen bei FluxoraCloud! 🎉','ok');
+    nav('dash');
+  } catch(err) {
+    btn.textContent='Konto erstellen';btn.disabled=false;
+    const m={'auth/email-already-in-use':'Diese E-Mail ist bereits registriert.','auth/weak-password':'Passwort zu schwach.','auth/invalid-email':'Ungültige E-Mail.'};
+    toast(m[err.code]||err.message,'er');
+  }
+};
+
+document.getElementById('r-pw2').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister()});
+
+// ===== LOGIN =====
+window.doLogin = async () => {
+  document.querySelectorAll('.fe').forEach(e=>e.classList.remove('on'));
+  const email=document.getElementById('l-email').value.trim();
+  const pw=document.getElementById('l-pw').value;
+  if(!email){document.getElementById('l-email-e').classList.add('on');return}
+  if(!pw){document.getElementById('l-pw-e').classList.add('on');return}
+  const btn=document.getElementById('l-btn');
+  btn.innerHTML='<span class="sp"></span> Anmelden...';btn.disabled=true;
+  try {
+    await signInWithEmailAndPassword(auth,email,pw);
+    toast('Erfolgreich angemeldet!','ok');
+    nav('dash');
+  } catch(err) {
+    btn.textContent='Anmelden';btn.disabled=false;
+    const m={'auth/invalid-credential':'E-Mail oder Passwort falsch.','auth/user-not-found':'Kein Konto gefunden.','auth/wrong-password':'Falsches Passwort.','auth/too-many-requests':'Zu viele Versuche. Bitte später erneut.'};
+    toast(m[err.code]||err.message,'er');
+  }
+};
+document.getElementById('l-pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+// ===== RESET =====
+window.doReset = async () => {
+  const email=document.getElementById('rs-email').value.trim();
+  if(!email){toast('Bitte E-Mail eingeben.','er');return}
+  const btn=document.getElementById('rs-btn');
+  btn.innerHTML='<span class="sp"></span> Senden...';btn.disabled=true;
+  try {
+    await sendPasswordResetEmail(auth,email);
+    document.getElementById('reset-form').classList.add('hidden');
+    document.getElementById('reset-ok').classList.remove('hidden');
+  } catch(err) {
+    btn.textContent='Reset-Link senden';btn.disabled=false;
+    toast(err.code==='auth/user-not-found'?'Kein Konto mit dieser E-Mail.':'Fehler beim Senden.','er');
+  }
+};
+
+// ===== DASH REFRESH =====
+function refreshDash(user) {
+  if (!userData) return;
+  const plan = PLANS[userData.plan] || PLANS.free;
+  const used = userData.storageUsed || 0;
+  const limit = userData.storageLimit || plan.storage;
+  const pct = Math.min(used/limit*100, 100);
+  const files = userData.files ? Object.entries(userData.files) : [];
+
+  // Name
+  const uname = userData.name || user.displayName || 'Nutzer';
+  document.getElementById('greet-name').textContent = uname.split(' ')[0];
+  document.getElementById('s-name').textContent = uname;
+  document.getElementById('s-email').textContent = user.email;
+  document.getElementById('s-since').textContent = fmtDate(userData.createdAt);
+
+  // Storage bars
+  const barClass = 'sw-fill' + (pct>90?' err':pct>70?' warn':'');
+  ['ov-bar','files-bar','up-bar'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.style.width=pct+'%';el.className=barClass}
+  });
+  const storInfo = `${fmtBytes(used)} / ${fmtBytes(limit)}`;
+  ['ov-storage-info','files-storage-info','up-storage-info'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=storInfo;
+  });
+
+  // Overview
+  const badge = document.getElementById('ov-plan-badge');
+  if(badge){badge.textContent=plan.name;badge.className=`pb ${userData.plan}`}
+  setEl('ov-used-lbl', `${fmtBytes(used)} von ${fmtBytes(limit)} genutzt`);
+  setEl('ov-files', files.length);
+  setEl('ov-used', fmtBytes(used));
+  setEl('ov-free', fmtBytes(Math.max(0,limit-used)));
+  setEl('ov-plan', plan.name);
+
+  // Settings plan
+  const sb=document.getElementById('s-plan-badge');
+  if(sb){sb.textContent=plan.name;sb.className=`pb ${userData.plan}`}
+  setEl('s-storage', `${fmtBytes(used)} / ${fmtBytes(limit)} (${pct.toFixed(1)}%)`);
+
+  // Upgrade badge
+  const ub=document.getElementById('up-cur-badge');
+  if(ub){ub.textContent=plan.name;ub.className=`pb ${userData.plan}`}
+
+  // Files count
+  setEl('file-count', `${files.length} Datei${files.length!==1?'en':''}`);
+
+  // Recent files
+  const sorted = files.sort(([,a],[,b])=>(b.uploadedAt||0)-(a.uploadedAt||0));
+  const ovRecent = document.getElementById('ov-recent');
+  if (files.length === 0) {
+    ovRecent.innerHTML = `<div class="empty"><div class="ei">📂</div><h3>Noch keine Dateien</h3><p>Lade deine ersten Dateien hoch.</p><button class="btn btn-p btn-sm" onclick="showTab('upload')">Hochladen</button></div>`;
+  } else {
+    ovRecent.innerHTML = buildTable(sorted.slice(0,5), user, used, limit);
+  }
+
+  // Files table
+  allFiles = sorted;
+  renderFilesTable(allFiles);
+}
+
+let allFiles = [];
+window.filterFiles = () => {
+  const q = document.getElementById('search').value.toLowerCase();
+  renderFilesTable(q ? allFiles.filter(([,f])=>f.name.toLowerCase().includes(q)) : allFiles);
+};
+
+function renderFilesTable(files) {
+  const el = document.getElementById('files-table');
+  if (!el) return;
+  if (files.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="ei">📂</div><h3>Keine Dateien gefunden</h3><p>Lade Dateien hoch oder ändere die Suche.</p><button class="btn btn-p btn-sm" onclick="showTab('upload')">Hochladen</button></div>`;
+  } else {
+    el.innerHTML = buildTable(files, auth.currentUser, userData?.storageUsed||0, userData?.storageLimit||PLANS.free.storage);
+  }
+}
+
+function buildTable(files, user, used, limit) {
+  return `<table><thead><tr><th>Name</th><th>Größe</th><th>Hochgeladen</th><th></th></tr></thead><tbody>
+    ${files.map(([id,f])=>`<tr>
+      <td><div class="fn"><span class="fic">${fileIcon(f.name)}</span>${f.name}</div></td>
+      <td>${fmtBytes(f.size||0)}</td>
+      <td>${fmtDate(f.uploadedAt)}</td>
+      <td><div class="fac">
+        <button class="btn btn-g btn-sm" onclick="copyLink('${encodeURIComponent(f.name)}')" title="Link">🔗</button>
+        <button class="btn btn-g btn-sm" data-del-id="${id}" data-del-size="${f.size||0}" onclick="openDel(this)" title="Löschen">🗑️</button>
+      </div></td>
+    </tr>`).join('')}
+  </tbody></table>`;
+}
+
+window.copyLink = (name) => {
+  navigator.clipboard.writeText(`https://fluxoracloud.app/share/${name}`);
+  toast('Share-Link kopiert!','ok');
+};
+
+window.openDel = (btn) => {
+  const id = btn.dataset.delId;
+  const size = parseFloat(btn.dataset.delSize);
+  openModal('del-modal');
+  document.getElementById('del-confirm').onclick = async () => {
+    try {
+      await remove(ref(db,`users/${auth.currentUser.uid}/files/${id}`));
+      const nu = Math.max(0,(userData.storageUsed||0)-size);
+      await update(ref(db,`users/${auth.currentUser.uid}`),{storageUsed:Math.round(nu)});
+      closeModal('del-modal');
+      toast('Datei gelöscht.','ok');
+    } catch(err) { toast('Fehler: '+err.message,'er'); }
+  };
+};
+
+// ===== UPLOAD =====
+let selectedFiles = [];
+window.addFiles = (fl) => {
+  selectedFiles = [...selectedFiles, ...fl];
+  renderQueue();
+};
+const uz = document.getElementById('uz');
+uz.addEventListener('dragover', e=>{e.preventDefault();uz.classList.add('over')});
+uz.addEventListener('dragleave', ()=>uz.classList.remove('over'));
+uz.addEventListener('drop', e=>{e.preventDefault();uz.classList.remove('over');addFiles([...e.dataTransfer.files])});
+
+function renderQueue() {
+  const q = document.getElementById('file-queue');
+  const ql = document.getElementById('queue-list');
+  if (!selectedFiles.length){q.classList.add('hidden');return}
+  q.classList.remove('hidden');
+  ql.innerHTML = selectedFiles.map((f,i)=>`
+    <div style="display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:11px 15px">
+      <span style="font-size:19px">${fileIcon(f.name)}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</div>
+        <div style="font-size:12px;color:var(--text3)">${fmtBytes(f.size/1024)}</div>
+      </div>
+      <button onclick="removeFile(${i})" style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:17px">✕</button>
+    </div>`).join('');
+}
+window.removeFile = i => {selectedFiles.splice(i,1);renderQueue()};
+window.clearQueue = () => {selectedFiles=[];renderQueue();document.getElementById('file-input').value=''};
+
+window.doUpload = async () => {
+  if (!auth.currentUser||!userData) {toast('Nicht angemeldet','er');return}
+  if (!selectedFiles.length) {toast('Keine Dateien ausgewählt','er');return}
+  const plan = PLANS[userData.plan]||PLANS.free;
+  const limit = userData.storageLimit||plan.storage;
+  let used = userData.storageUsed||0;
+  const totalKB = selectedFiles.reduce((s,f)=>s+f.size/1024,0);
+  if (used+totalKB > limit) {toast('Nicht genug Speicher! Bitte upgraden.','er');return}
+
+  document.getElementById('file-queue').classList.add('hidden');
+  document.getElementById('prog-wrap').classList.remove('hidden');
+  const pl = document.getElementById('prog-list');
+
+  for (const file of selectedFiles) {
+    const sizeKB = file.size/1024;
+    const row = document.createElement('div');
+    row.style='padding:13px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px';
+    row.innerHTML=`<span style="font-size:19px">${fileIcon(file.name)}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${file.name}</div>
+        <div style="font-size:12px;color:var(--text3)">${fmtBytes(file.size)}</div>
+        <div style="height:4px;background:var(--bg2);border-radius:100px;margin-top:5px;overflow:hidden"><div class="pf" style="height:100%;background:var(--accent);border-radius:100px;width:0%;transition:width .3s"></div></div>
+      </div>
+      <span class="ps" style="font-size:13px;color:var(--text3)">Warte...</span>`;
+    pl.appendChild(row);
+    const pf=row.querySelector('.pf'), ps=row.querySelector('.ps');
+    ps.textContent='Lädt hoch...';
+    for(let p=0;p<95;p+=Math.random()*18+6){pf.style.width=Math.min(p,94)+'%';await new Promise(r=>setTimeout(r,70))}
+    try {
+      await push(ref(db,`users/${auth.currentUser.uid}/files`),{name:file.name,size:Math.round(sizeKB),type:file.type||'application/octet-stream',uploadedAt:Date.now()});
+      used+=sizeKB;
+      await update(ref(db,`users/${auth.currentUser.uid}`),{storageUsed:Math.round(used)});
+      pf.style.width='100%';pf.style.background='var(--ok)';ps.textContent='✓ Fertig';ps.style.color='var(--ok)';
+    } catch(err) {
+      pf.style.background='var(--err)';ps.textContent='✕ Fehler';ps.style.color='var(--err)';
+    }
+  }
+  toast(`${selectedFiles.length} Datei${selectedFiles.length>1?'en':''} hochgeladen! ☁️`,'ok');
+  selectedFiles=[];
+  document.getElementById('file-input').value='';
+  setTimeout(()=>{document.getElementById('prog-wrap').classList.add('hidden');pl.innerHTML=''},2000);
+};
+
+// ===== UPGRADE =====
+let selectedPlan = null;
+function renderPlanCards() {
+  const cur = userData?.plan||'free';
+  const pc = document.getElementById('plan-cards');
+  pc.innerHTML = Object.entries(PLANS).map(([key,p])=>`
+    <div class="price-c ${key==='pro'?'pop':''}">
+      ${key==='pro'?'<div class="pop-b">⭐ Empfohlen</div>':''}
+      <div class="price-n">${p.name}</div>
+      <div class="price-p">${p.price===0?'€0':'€'+p.price} <span>/ Mo.</span></div>
+      <div class="price-s">${p.label} Speicher</div>
+      <ul class="price-f">${planFeatures(key).map(f=>`<li ${f.no?'class="no"':''}>${f.text}</li>`).join('')}</ul>
+      <button class="btn ${key===cur?'btn-o':(key==='pro'&&key!==cur)?'btn-p':'btn-o'}" 
+        style="width:100%;justify-content:center" 
+        ${key===cur?'disabled':''} 
+        onclick="selectPlan('${key}','${p.name}','€${p.price}/Monat · ${p.label} Speicher')">
+        ${key===cur?'✓ Aktueller Plan': key==='free'?'Kostenlos wechseln':p.name+' wählen'}
+      </button>
+    </div>`).join('');
+}
+
+function planFeatures(key) {
+  const base=[{text:'Cloud-Speicher'},{text:'Unbegrenzte Dateien'},{text:'Share-Links'},{text:'30 Tage Papierkorb'}];
+  if(key==='free') return [...base,{text:'Prioritäts-Support',no:true},{text:'Statistiken',no:true}];
+  if(key==='starter') return [...base,{text:'E-Mail Support'},{text:'Statistiken',no:true}];
+  if(key==='pro') return [{text:'200 GB Speicher'},{text:'Unbegrenzte Dateien'},{text:'Passwortgeschützte Links'},{text:'90 Tage Papierkorb'},{text:'Prioritäts-Support'},{text:'Erweiterte Statistiken'}];
+  return [{text:'1 TB Speicher'},{text:'Unbegrenzte Dateien'},{text:'Passwortgeschützte Links'},{text:'Unbegrenzter Papierkorb'},{text:'24/7 Support'},{text:'Statistiken & API'}];
+}
+
+window.selectPlan = (plan, name, desc) => {
+  if(plan==='free') { if(confirm('Zum Free-Plan wechseln?')) activatePlan('free'); return; }
+  selectedPlan=plan;
+  document.getElementById('co-title').textContent=`${name} buchen`;
+  document.getElementById('co-desc').textContent=desc;
+  ['co-name','co-num','co-exp','co-cvc'].forEach(id=>document.getElementById(id).value='');
+  openModal('checkout-modal');
+};
+
+window.fmtCard = el => { el.value=el.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim().slice(0,19) };
+window.fmtExp = el => { let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);el.value=v };
+
+window.doCheckout = async () => {
+  const n=document.getElementById('co-name').value.trim();
+  const num=document.getElementById('co-num').value.replace(/\s/g,'');
+  const exp=document.getElementById('co-exp').value;
+  const cvc=document.getElementById('co-cvc').value;
+  if(!n||num.length<16||exp.length<5||cvc.length<3){toast('Bitte alle Felder korrekt ausfüllen.','er');return}
+  const btn=document.getElementById('co-btn');
+  btn.innerHTML='<span class="sp"></span> Verarbeitung...';btn.disabled=true;
+  await new Promise(r=>setTimeout(r,1800));
+  await activatePlan(selectedPlan);
+  closeModal('checkout-modal');
+  btn.textContent='Jetzt buchen';btn.disabled=false;
+};
+
+async function activatePlan(plan) {
+  if(!auth.currentUser) return;
+  await update(ref(db,`users/${auth.currentUser.uid}`),{plan,storageLimit:PLANS[plan].storage});
+  toast(`Plan auf ${PLANS[plan].name} geändert! 🎉`,'ok');
+  renderPlanCards();
+}
+
+// ===== SETTINGS =====
+window.saveName = async () => {
+  const name=document.getElementById('new-name').value.trim();
+  if(!name){toast('Name darf nicht leer sein.','er');return}
+  try {
+    await updateProfile(auth.currentUser,{displayName:name});
+    await update(ref(db,`users/${auth.currentUser.uid}`),{name});
+    closeModal('name-modal');
+    toast('Name geändert!','ok');
+  } catch(err){toast('Fehler: '+err.message,'er')}
+};
+
+window.deleteAllFiles = async () => {
+  if(!confirm('Wirklich ALLE Dateien löschen?')) return;
+  try {
+    await remove(ref(db,`users/${auth.currentUser.uid}/files`));
+    await update(ref(db,`users/${auth.currentUser.uid}`),{storageUsed:0});
+    toast('Alle Dateien gelöscht.','ok');
+  } catch(err){toast('Fehler: '+err.message,'er')}
+};
+
+window.deleteAccount = async () => {
+  if(!confirm('Wirklich das Konto löschen? Alle Daten werden permanent entfernt.')) return;
+  try {
+    await remove(ref(db,`users/${auth.currentUser.uid}`));
+    await deleteUser(auth.currentUser);
+    nav('home');
+    toast('Konto gelöscht.','ok');
+  } catch(err) {
+    if(err.code==='auth/requires-recent-login') toast('Bitte neu anmelden, dann Konto löschen.','er');
+    else toast('Fehler: '+err.message,'er');
+  }
+};
+
+// ===== UTILS =====
+function setEl(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+
+// ===== FAQ =====
+document.querySelectorAll('.faq-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const body=btn.nextElementSibling, arrow=btn.querySelector('span');
+    const open=body.style.display==='block';
+    body.style.display=open?'none':'block';
+    arrow.style.transform=open?'':'rotate(180deg)';
+  });
+});
+
+// Init
+applyTheme();
+</script>
+</body>
+</html>
